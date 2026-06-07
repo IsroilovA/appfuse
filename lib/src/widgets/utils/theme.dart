@@ -12,30 +12,26 @@ Future<void> selectThemeDialog(
       builder: (context) => AlertDialog(
         title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
         contentPadding: const EdgeInsets.symmetric(vertical: 16),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: context.supportedThemes
-              .map(
-                (theme) => _AppThemeRadioButton(
-                  themeMode: theme,
-                  onChanged: (locale) {
-                    context.changeAppThemeMode(theme);
-                    Navigator.of(context).pop();
-                  },
-                ),
-              )
-              .toList(),
+        content: RadioGroup<ThemeMode>(
+          groupValue: context.currentThemeMode,
+          onChanged: (themeMode) {
+            if (themeMode == null) return;
+            context.changeAppThemeMode(themeMode);
+            Navigator.of(context).pop();
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: context.supportedThemes
+                .map((theme) => _AppThemeRadioButton(themeMode: theme))
+                .toList(),
+          ),
         ),
       ),
     );
 
 class _AppThemeRadioButton extends StatelessWidget {
-  const _AppThemeRadioButton({
-    required this.themeMode,
-    required this.onChanged,
-  });
+  const _AppThemeRadioButton({required this.themeMode});
   final ThemeMode themeMode;
-  final void Function(ThemeMode?)? onChanged;
 
   @override
   Widget build(BuildContext context) => ListTile(
@@ -46,9 +42,7 @@ class _AppThemeRadioButton extends StatelessWidget {
         leading: Radio<ThemeMode>(
           activeColor: Theme.of(context).colorScheme.primary,
           value: themeMode,
-          groupValue: context.currentThemeMode,
-          onChanged: onChanged,
         ),
-        onTap: () => onChanged?.call(themeMode),
+        onTap: () => RadioGroup.maybeOf<ThemeMode>(context)?.onChanged(themeMode),
       );
 }

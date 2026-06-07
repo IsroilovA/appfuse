@@ -12,20 +12,24 @@ Future<void> selectLocaleDialog(
       builder: (context) => AlertDialog(
         title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
         contentPadding: const EdgeInsets.symmetric(vertical: 16),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: context.supportedLanguages.keys
-              .map(
-                (locale) => _AppLocaleRadioButton(
-                  title: context.supportedLanguages[locale]!,
-                  value: locale,
-                  onChanged: (locale) {
-                    context.changeAppLocale(locale!);
-                    Navigator.of(context).pop();
-                  },
-                ),
-              )
-              .toList(),
+        content: RadioGroup<Locale>(
+          groupValue: context.currentLocale,
+          onChanged: (locale) {
+            if (locale == null) return;
+            context.changeAppLocale(locale);
+            Navigator.of(context).pop();
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: context.supportedLanguages.keys
+                .map(
+                  (locale) => _AppLocaleRadioButton(
+                    title: context.supportedLanguages[locale]!,
+                    value: locale,
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ),
     );
@@ -34,11 +38,9 @@ class _AppLocaleRadioButton extends StatelessWidget {
   const _AppLocaleRadioButton({
     required this.title,
     required this.value,
-    required this.onChanged,
   });
   final String title;
   final Locale value;
-  final void Function(Locale?)? onChanged;
 
   @override
   Widget build(BuildContext context) => ListTile(
@@ -49,9 +51,7 @@ class _AppLocaleRadioButton extends StatelessWidget {
         leading: Radio<Locale>(
           activeColor: Theme.of(context).colorScheme.primary,
           value: value,
-          groupValue: context.currentLocale,
-          onChanged: onChanged,
         ),
-        onTap: () => onChanged?.call(value),
+        onTap: () => RadioGroup.maybeOf<Locale>(context)?.onChanged(value),
       );
 }

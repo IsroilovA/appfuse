@@ -61,9 +61,9 @@ class _AskPermissionDialog extends StatelessWidget {
 
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
+        width: MediaQuery.sizeOf(context).width * 0.8,
         decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
           boxShadow: const [
             BoxShadow(color: Colors.black45, blurRadius: 10),
@@ -92,7 +92,7 @@ class _AskPermissionDialog extends StatelessWidget {
               ),
             const SizedBox(height: 20),
             Container(
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery.sizeOf(context).width,
               decoration: BoxDecoration(
                 color: secondaryColor.withAlpha(50),
                 borderRadius: const BorderRadius.only(
@@ -176,7 +176,7 @@ class _AskPermissionDialogButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 13),
         onPressed: onTap,
         child: SizedBox(
-          width: MediaQuery.of(context).size.width,
+          width: MediaQuery.sizeOf(context).width,
           child: Text(
             name,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(

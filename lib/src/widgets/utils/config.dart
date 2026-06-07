@@ -15,20 +15,17 @@ Future<void> selectConfigDialog(
     builder: (context) => AlertDialog(
       title: Text(title),
       contentPadding: const EdgeInsets.symmetric(vertical: 16),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: configs
-            .map(
-              (config) => _ConfigRadioButton(
-                selectedConfig: selectedConfig,
-                config: config,
-                onChanged: (config) {
-                  if (config != null) context.changeConfig(config);
-                  Navigator.of(context).pop();
-                },
-              ),
-            )
-            .toList(),
+      content: RadioGroup<String>(
+        groupValue: selectedConfig.name,
+        onChanged: (name) {
+          final config = configs.where((config) => config.name == name).firstOrNull;
+          if (config != null) context.changeConfig(config);
+          Navigator.of(context).pop();
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: configs.map((config) => _ConfigRadioButton(config: config)).toList(),
+        ),
       ),
     ),
   );
@@ -36,14 +33,8 @@ Future<void> selectConfigDialog(
 
 @immutable
 class _ConfigRadioButton extends StatelessWidget {
-  const _ConfigRadioButton({
-    required this.selectedConfig,
-    required this.config,
-    required this.onChanged,
-  });
-  final BaseConfig selectedConfig;
+  const _ConfigRadioButton({required this.config});
   final BaseConfig config;
-  final ValueChanged<BaseConfig?> onChanged;
 
   @override
   Widget build(BuildContext context) => ListTile(
@@ -51,11 +42,7 @@ class _ConfigRadioButton extends StatelessWidget {
         leading: Radio<String>(
           activeColor: config.color,
           value: config.name,
-          groupValue: selectedConfig.name,
-          onChanged: (value) {
-            onChanged.call(config);
-          },
         ),
-        onTap: () => onChanged.call(config),
+        onTap: () => RadioGroup.maybeOf<String>(context)?.onChanged(config.name),
       );
 }

@@ -7,7 +7,7 @@ void showAppFuseMenu(
   VoidCallback? onClose,
   Color? backgroundColor,
 }) {
-  if (MediaQuery.of(context).size.width > 750) {
+  if (MediaQuery.sizeOf(context).width > 750) {
     showDialog<void>(
       context: context,
       useRootNavigator: true,
@@ -132,7 +132,7 @@ class _SettingsBody extends StatelessWidget {
           Flexible(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height - 80,
+                maxHeight: MediaQuery.sizeOf(context).height - 80,
               ),
               child: SingleChildScrollView(
                 child: Column(
