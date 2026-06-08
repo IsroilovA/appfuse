@@ -102,7 +102,8 @@ class _AppFuseScopeState extends State<AppFuseScope> {
       localizationsDelegates: widget.localizationsDelegates,
       themes: widget.themes,
       onProgress: widget.onProgress ?? (m) => developer.log(m, name: 'app-fuse', time: DateTime.now()),
-      onError: widget.onError ??
+      onError:
+          widget.onError ??
           (e, s) => developer.log('$e', name: 'app-fuse', time: DateTime.now(), error: e, stackTrace: s),
     );
   }
@@ -128,72 +129,50 @@ class _AppFuseScopeState extends State<AppFuseScope> {
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder<AppFuseState>(
-        valueListenable: _controller,
-        builder: (context, state, _) {
-          if (state.isProcessing) {
-            return VitalApp(
-              home: widget.progressBuilder?.call(state.progressMessage ?? '') ?? widget.placeholder,
-            );
-          }
+    valueListenable: _controller,
+    builder: (context, state, _) {
+      if (state.isProcessing) {
+        return VitalApp(home: widget.progressBuilder?.call(state.progressMessage ?? '') ?? widget.placeholder);
+      }
 
-          if (state.hasError) {
-            return VitalApp(
-              home: widget.errorBuilder?.call(
-                    state.error!,
-                    state.stackTrace,
-                  ) ??
-                  ErrorWidget(state.error!),
-            );
-          }
+      if (state.hasError) {
+        return VitalApp(home: widget.errorBuilder?.call(state.error!, state.stackTrace) ?? ErrorWidget(state.error!));
+      }
 
-          final currentConfig = state.config;
-          if (currentConfig is EmptyConfig) {
-            return _InheritedAppFuseScope(
-              controller: _controller,
-              state: state,
-              child: widget.app,
-            );
-          }
+      final currentConfig = state.config;
+      if (currentConfig is EmptyConfig) {
+        return _InheritedAppFuseScope(controller: _controller, state: state, child: widget.app);
+      }
 
-          _key = _getKey(currentConfig);
-          final app = _InheritedAppFuseScope(
-            state: state,
-            controller: _controller,
-            child: widget.app,
-          );
-          // The app is a complete application (e.g. MaterialApp) and needs no
-          // shell — wrapping it would shadow the root View's live MediaQuery.
-          if (!currentConfig.showBanner) return KeyedSubtree(key: _key, child: app);
-          return KeyedSubtree(
-            key: _key,
-            child: Stack(
-              // Non-directional alignment: there is no Directionality above the app.
-              alignment: Alignment.topLeft,
-              children: [
-                app,
-                Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: ConfigBanner(
-                    name: currentConfig.name,
-                    color: currentConfig.color,
-                    onPressed: () {},
-                    onLongPressed: () {},
-                  ),
-                ),
-              ],
+      _key = _getKey(currentConfig);
+      final app = _InheritedAppFuseScope(state: state, controller: _controller, child: widget.app);
+
+      if (!currentConfig.showBanner) return KeyedSubtree(key: _key, child: app);
+      return KeyedSubtree(
+        key: _key,
+        child: Stack(
+          alignment: Alignment.topLeft,
+          children: [
+            app,
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: ConfigBanner(
+                name: currentConfig.name,
+                color: currentConfig.color,
+                onPressed: () {},
+                onLongPressed: () {},
+              ),
             ),
-          );
-        },
+          ],
+        ),
       );
+    },
+  );
 }
 
 /// An inherited widget that provides the [AppFuseState] and [AppFuseController] to the widget tree.
 class _InheritedAppFuseScope extends InheritedWidget {
-  const _InheritedAppFuseScope({
-    required this.state,
-    required this.controller,
-    required super.child,
-  });
+  const _InheritedAppFuseScope({required this.state, required this.controller, required super.child});
 
   /// The current state of the application.
   final AppFuseState state;
@@ -207,10 +186,10 @@ class _InheritedAppFuseScope extends InheritedWidget {
       : context.getInheritedWidgetOfExactType<_InheritedAppFuseScope>();
 
   static Never _notFoundInheritedWidgetOfExactType() => throw ArgumentError(
-        'Out of scope, not found inherited widget '
-            'a _InheritedAppFuseScope of the exact type',
-        'out_of_scope',
-      );
+    'Out of scope, not found inherited widget '
+        'a _InheritedAppFuseScope of the exact type',
+    'out_of_scope',
+  );
 
   /// The state from the closest instance of this class that encloses the given context.
   static _InheritedAppFuseScope of(BuildContext context, {bool listen = true}) =>

@@ -9,10 +9,6 @@ class VitalApp extends StatelessWidget {
   /// [Widget] to be displayed
   final Widget home;
 
-  // Intentionally provides no MediaQuery: the root [View] already exposes a
-  // live one that tracks metrics changes. Inserting a one-shot
-  // `MediaQueryData.fromView` snapshot here would shadow it and freeze the
-  // app's metrics at startup values.
   @override
   Widget build(BuildContext context) => Directionality(
         textDirection: TextDirection.ltr,

@@ -38,11 +38,11 @@ class AppConfig extends JsonAssetConfig {
 
 /// Create concrete implementations for each environment.
 class ProdConfig extends AppConfig {
-  ProdConfig() : super(name: 'prod', path: 'config/prod.json', color: Colors.green);
+  ProdConfig() : super(name: 'prod', path: 'config/prod.json', color: Colors.green, showBanner: true);
 }
 
 class TestConfig extends AppConfig {
-  TestConfig() : super(name: 'test', path: 'config/test.json', color: Colors.red);
+  TestConfig() : super(name: 'test', path: 'config/test.json', color: Colors.red, showBanner: true);
 }
 
 // Mock classes for the example.
@@ -67,21 +67,21 @@ class Dependencies with AppFuseInitialization {
   /// Each key is a descriptive name for the step, which is useful for logging.
   @override
   Map<String, InitializationStep> get steps => {
-        'initialize dependency A': (state) async {
-          // Perform async work like opening a database or initializing a service.
-          await Future.delayed(const Duration(seconds: 1));
-          dependencyA = A();
-        },
-        'initialize dependency B': (state) async {
-          final c = state.config as AppConfig;
-          c.appName;
-          final d = state.init as Dependencies;
-          d.dependencyA;
+    'initialize dependency A': (state) async {
+      // Perform async work like opening a database or initializing a service.
+      await Future.delayed(const Duration(seconds: 1));
+      dependencyA = A();
+    },
+    'initialize dependency B': (state) async {
+      final c = state.config as AppConfig;
+      c.appName;
+      final d = state.init as Dependencies;
+      d.dependencyA;
 
-          await Future.delayed(const Duration(seconds: 1));
-          dependencyB = B();
-        },
-      };
+      await Future.delayed(const Duration(seconds: 1));
+      dependencyB = B();
+    },
+  };
 }
 
 /// The root widget of your application.
@@ -111,17 +111,17 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        // Use the context extensions to get state from AppFuse.
-        // `watchSettings` rebuilds the widget when the value changes.
-        // `readSettings` gets the value once without subscribing to changes.
-        locale: context.currentLocale,
-        supportedLocales: context.readFuseState.supportedLocales,
-        localizationsDelegates: context.readFuseState.localizationsDelegates,
-        themeMode: context.watchFuseState.themeMode,
-        theme: context.readFuseState.lightTheme,
-        darkTheme: context.readFuseState.darkTheme,
-        home: const HomeScreen(),
-      );
+    // Use the context extensions to get state from AppFuse.
+    // `watchSettings` rebuilds the widget when the value changes.
+    // `readSettings` gets the value once without subscribing to changes.
+    locale: context.currentLocale,
+    supportedLocales: context.readFuseState.supportedLocales,
+    localizationsDelegates: context.readFuseState.localizationsDelegates,
+    themeMode: context.watchFuseState.themeMode,
+    theme: context.readFuseState.lightTheme,
+    darkTheme: context.readFuseState.darkTheme,
+    home: const HomeScreen(),
+  );
 }
 
 class HomeScreen extends StatefulWidget {
