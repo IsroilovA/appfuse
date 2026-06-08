@@ -9,19 +9,20 @@ class VitalApp extends StatelessWidget {
   /// [Widget] to be displayed
   final Widget home;
 
+  // Intentionally provides no MediaQuery: the root [View] already exposes a
+  // live one that tracks metrics changes. Inserting a one-shot
+  // `MediaQueryData.fromView` snapshot here would shadow it and freeze the
+  // app's metrics at startup values.
   @override
-  Widget build(BuildContext context) => MediaQuery(
-        data: MediaQueryData.fromView(View.of(context)),
-        child: Directionality(
-          textDirection: TextDirection.ltr,
-          child: DefaultTextStyle(
-            style: const TextStyle(
-              color: Color(0x00000000),
-              fontFamily: 'Roboto',
-              fontSize: 14,
-            ),
-            child: home,
+  Widget build(BuildContext context) => Directionality(
+        textDirection: TextDirection.ltr,
+        child: DefaultTextStyle(
+          style: const TextStyle(
+            color: Color(0x00000000),
+            fontFamily: 'Roboto',
+            fontSize: 14,
           ),
+          child: home,
         ),
       );
 }

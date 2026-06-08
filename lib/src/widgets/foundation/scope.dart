@@ -156,25 +156,30 @@ class _AppFuseScopeState extends State<AppFuseScope> {
           }
 
           _key = _getKey(currentConfig);
-          return VitalApp(
+          final app = _InheritedAppFuseScope(
+            state: state,
+            controller: _controller,
+            child: widget.app,
+          );
+          // The app is a complete application (e.g. MaterialApp) and needs no
+          // shell — wrapping it would shadow the root View's live MediaQuery.
+          if (!currentConfig.showBanner) return KeyedSubtree(key: _key, child: app);
+          return KeyedSubtree(
             key: _key,
-            home: Stack(
+            child: Stack(
+              // Non-directional alignment: there is no Directionality above the app.
+              alignment: Alignment.topLeft,
               children: [
-                _InheritedAppFuseScope(
-                  state: state,
-                  controller: _controller,
-                  child: widget.app,
-                ),
-                if (currentConfig.showBanner)
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: ConfigBanner(
-                      name: currentConfig.name,
-                      color: currentConfig.color,
-                      onPressed: () {},
-                      onLongPressed: () {},
-                    ),
+                app,
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: ConfigBanner(
+                    name: currentConfig.name,
+                    color: currentConfig.color,
+                    onPressed: () {},
+                    onLongPressed: () {},
                   ),
+                ),
               ],
             ),
           );
