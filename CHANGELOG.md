@@ -2,7 +2,7 @@
 
 ## 0.0.4
 
-- **Breaking**: migrated from the deprecated in-SDK `package:flutter/material.dart` to the standalone [`material_ui`](https://pub.dev/packages/material_ui) package (Flutter 3.50 deprecation). Public types such as `ThemeData`, `ThemeMode`, and `Color` used by `AppFuseScope`, `AppFuseState`, and the settings widgets now come from `material_ui`, so apps must import `package:material_ui/material_ui.dart` instead of `package:flutter/material.dart`. Apps that still use the in-SDK Material library can wrap their app in `MaterialUiCompatibilityBridge` during the transition, but they cannot pass in-SDK Material types (for example `ThemeData`) to appfuse.
+- **Breaking**: migrated from the deprecated `package:flutter/material.dart` to [`material_ui`](https://pub.dev/packages/material_ui). Apps must import `package:material_ui/material_ui.dart` to pass `ThemeData` and `ThemeMode` to appfuse.
 - **Dependencies**: added `material_ui` ^1.11.1. Requires Dart 3.13 and Flutter 3.47.
 
 ## 0.0.3
