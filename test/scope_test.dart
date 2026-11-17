@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:appfuse/appfuse.dart';
 import 'package:appfuse/src/widgets/foundation/vital_app.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'helpers.dart';
